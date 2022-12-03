@@ -1,5 +1,3 @@
-# SQl - Structured Query Language
-# CRUD-create,rekud,update,delete
 import sqlite3
 from sqlite3 import Error
 
@@ -13,14 +11,16 @@ def create_connektion(db_file):
     return conn
 
 
-def update_students_mark_is_married(conn,id,mark,married_status):
-    sql=''' UPDATE student SET mark= ?,is_married=? WHERE id=?'''
+def update_students_mark_is_married(conn, id, mark, married_status):
+    sql = ''' UPDATE student SET mark= ?,is_married=? WHERE id=?'''
     try:
         cursor = conn.cursor()
-        cursor.execute(sql,(mark,married_status,id))
+        cursor.execute(sql, (mark, married_status, id))
         conn.commit()
     except Error as e:
         print(e)
+
+
 def create_table(conn, sql):
     try:
         cursor = conn.cursor()
@@ -28,12 +28,13 @@ def create_table(conn, sql):
     except Error as e:
         print(e)
 
+
 def rekud_students(conn):
     try:
         sql = '''SELECT * FROM student'''
-        cursor=conn.cursor()
+        cursor = conn.cursor()
         cursor.execute(sql)
-        rows =cursor.fetchall()
+        rows = cursor.fetchall()
 
         for row in rows:
             print(row)
@@ -47,11 +48,21 @@ def create_student(conn, student):
     '''
     try:
         cursor = conn.cursor()
-        cursor.execute(sql,student)
+        cursor.execute(sql, student)
         conn.commit()
     except Error as e:
         print(e)
 
+
+def delete_student(conn, id):
+    sql = '''DELETE FROM student WHERE id=?'''
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql, (id,))
+        conn.commit()
+    except Error as e:
+        print(e)
 
 
 database = r'group_24.db'
@@ -70,8 +81,9 @@ is_married BOOLEAN DEFAULT FALSE
 connektion = create_connektion(database)
 if connektion is not None:
     print('всё работает')
-    # create_table(connektion, sql_create_student_table)
-    # create_student(connektion,('Sultan',10,'плавание','2006-08-20',True))
+    create_table(connektion, sql_create_student_table)
+    # create_student(connektion,('Kamran',10,'swim','2006-08-20',True))
     rekud_students(connektion)
-    update_students_mark_is_married(connektion,4,100,False)
+    update_students_mark_is_married(connektion, 4, 100, False)
+    delete_student(connektion, 3)
     rekud_students(connektion)
